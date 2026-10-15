@@ -17,6 +17,9 @@ defineProps({ goods: Object, status: Boolean })
         {{ goods.category_name }} <StatusBadge v-if="status" :status="goods.status" />
       </div>
       <h3>{{ goods.title }}</h3>
+      <p v-if="goods.recommendation_reason" class="recommendation-reason">
+        <Icon name="sparkles" :size="12" />{{ goods.recommendation_reason }}
+      </p>
       <div class="goods-bottom">
         <div class="price"><small>¥</small>{{ money(goods.price) }}</div>
         <span class="favorite-count"

@@ -43,5 +43,20 @@ admin_id · target · action"];
  user -> report [label="举报/处理"];
  user -> session;
  user -> audit;
+ review[label="trade_review
+UQ order_id · buyer/seller
+rating · content"];
+ event[label="order_event
+order_id · actor_id · type · time"];
+ notification[label="notification
+user_id · kind · content · is_read"];
+ announcement[label="announcement
+status · pinned · title · content"];
+ order -> review [label="0..1 成交评价"];
+ user -> review [label="评价/被评价"];
+ order -> event [label="1:N 进度"];
+ user -> notification [label="1:N 接收"];
+ user -> announcement [label="管理"];
+
 
 }

@@ -123,6 +123,13 @@ public class DemoData implements ApplicationRunner {
             day);
       }
     }
+    db.update(
+        "INSERT INTO order_event(order_id,actor_id,event_type,detail,created_at) SELECT"
+            + " id,buyer_id,'CREATED','买家发起交易（历史演示数据）',created_at FROM trade_order");
+    db.update(
+        "INSERT INTO order_event(order_id,actor_id,event_type,detail,created_at) SELECT"
+            + " id,buyer_id,'COMPLETED','买家确认完成（历史演示数据）',completed_at FROM trade_order WHERE"
+            + " status='COMPLETED' AND completed_at IS NOT NULL");
     db.update("INSERT INTO favorite(user_id,goods_id) VALUES (3,1),(3,2),(3,4)");
     long message =
         db.insert(

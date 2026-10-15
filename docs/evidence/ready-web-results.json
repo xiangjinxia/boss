@@ -1,52 +1,67 @@
 {
-  "dependency_free_server": true,
-  "extracted_zip_has_node_modules": false,
-  "http_checks": [
+  "http_checks": 12,
+  "checks": [
     {
       "path": "/",
       "status": 200,
-      "passed": true
+      "type": "text/html"
     },
     {
-      "path": "/goods/1",
+      "path": "/sellers/2",
       "status": 200,
-      "passed": true
+      "type": "text/html"
+    },
+    {
+      "path": "/orders/1",
+      "status": 200,
+      "type": "text/html"
+    },
+    {
+      "path": "/notifications",
+      "status": 200,
+      "type": "text/html"
+    },
+    {
+      "path": "/admin",
+      "status": 200,
+      "type": "text/html"
     },
     {
       "path": "/api/health",
       "status": 200,
-      "passed": true
+      "type": "application/json"
     },
     {
-      "path": "/api/goods?size=1",
+      "path": "/api/discovery",
       "status": 200,
-      "passed": true
+      "type": "application/json"
     },
     {
-      "path": "/samples/camera.svg",
+      "path": "/api/announcements",
       "status": 200,
-      "passed": true
+      "type": "application/json"
     },
     {
-      "path": "/assets/missing.js",
-      "status": 404,
-      "passed": true
+      "path": "/samples/books.svg",
+      "status": 200,
+      "type": "image/svg+xml"
     },
     {
-      "path": "/%2e%2e/READY-WEB.md",
-      "status": 400,
-      "passed": true
+      "path": "/api/admin/categories",
+      "status": 200
+    },
+    {
+      "path": "/api/admin/announcements",
+      "status": 200
+    },
+    {
+      "path": "/api/admin/dashboard",
+      "status": 200
     }
   ],
-  "windows_launcher": "Provided; Windows execution to be verified on user machine",
-  "browser": {
-    "startTime": "2026-10-15T03:13:05.178Z",
-    "duration": 44502.509,
-    "expected": 2,
-    "skipped": 0,
-    "unexpected": 0,
-    "flaky": 0
-  },
-  "bundle_sha256": "c0037f7955013e88ab944ab65985c57d54f11e91f7609c8f034e0d5b627cec69",
-  "bundle_bytes": 648893
+  "assets_verified": 20,
+  "node_modules_required": false,
+  "backend": "current V1.1 Spring Boot + real MySQL",
+  "result": "passed",
+  "timestamp": "2026-10-15T06:45:31Z"
 }

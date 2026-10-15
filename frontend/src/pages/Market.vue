@@ -1,6 +1,6 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
-import { http, task } from '../services/api'
+import { http, task, session } from '../services/api'
 import Icon from '../components/Icon.vue'
 import GoodsCard from '../components/GoodsCard.vue'
 const categories = ref([]),
@@ -9,7 +9,11 @@ const categories = ref([]),
   total = ref(0),
   loading = ref(false),
   error = ref(false),
-  advanced = ref(false)
+  advanced = ref(false),
+  discovery = ref(null),
+  announcements = ref([]),
+  announcement = ref(null),
+  discoveryFailed = ref(false)
 const filters = reactive({
   q: '',
   category: undefined,
@@ -53,12 +57,21 @@ function clear() {
   })
   load(true)
 }
+async function discover() {
+  discoveryFailed.value = false
+  try {
+    discovery.value = await http.get('/discovery')
+  } catch {
+    discoveryFailed.value = true
+  }
+}
 onMounted(async () => {
-  await load()
+  await Promise.all([load(), discover()])
   await task(async () => {
-    ;[categories.value, stats.value] = await Promise.all([
+    ;[categories.value, stats.value, announcements.value] = await Promise.all([
       http.get('/categories'),
-      http.get('/public/stats')
+      http.get('/public/stats'),
+      http.get('/announcements')
     ])
   })
 })
@@ -124,6 +137,70 @@ onMounted(async () => {
         <Icon name="leaf" /><span><b>循环生活</b><small>让美好继续，给生活减负</small></span>
       </div>
     </section>
+    <section v-if="announcements.length" class="announcement-strip">
+      <Icon name="bell" :size="18" /><b>校园公告</b
+      ><button v-for="a in announcements.slice(0, 3)" :key="a.id" @click="announcement = a">
+        {{ a.pinned ? '置顶 · ' : '' }}{{ a.title }}<Icon name="right" :size="13" />
+      </button>
+    </section>
+    <section v-if="discovery" class="market-section discovery-section" aria-label="好物推荐">
+      <div class="section-heading">
+        <div>
+          <div class="eyebrow subtle">A LITTLE CLOSER TO WHAT YOU LOVE</div>
+          <h2>
+            {{ discovery.mode === 'PERSONALIZED' ? '猜你喜欢' : '为你发现'
+            }}<span class="heading-dot">.</span>
+          </h2>
+          <p>
+            {{
+              discovery.mode === 'PERSONALIZED'
+                ? '从你的收藏出发，发现下一份心动。'
+                : '先看看同学们的好物，收藏后会更懂你的喜好。'
+            }}
+          </p>
+        </div>
+        <button class="button ghost small" @click="discover">
+          <Icon name="refresh" :size="14" />更新推荐
+        </button>
+      </div>
+      <details class="recommendation-explainer">
+        <summary><Icon name="sparkles" :size="15" />为什么推荐给我？</summary>
+        <p>{{ discovery.method }}</p>
+        <p v-if="discovery.favoriteCount">
+          收藏参考价中位数 ¥{{ discovery.priceCenter }} · 常收藏：{{
+            discovery.profile.map((p) => p.name).join('、')
+          }}
+        </p>
+        <p>
+          这是基于收藏的规则推荐，按类别、价格、热度和时间排序。推荐只包含当前在售且卖家正常的商品。
+        </p>
+        <RouterLink v-if="!session.user" to="/login" class="text-button"
+          >登录后建立自己的收藏偏好 →</RouterLink
+        >
+      </details>
+      <div v-if="discovery.recommended.length" class="goods-grid">
+        <GoodsCard v-for="g in discovery.recommended" :key="g.id" :goods="g" />
+      </div>
+      <div v-else class="empty-state">
+        <h3>暂时没有新的推荐</h3>
+        <p>你可能已经收藏了当前的好物，去集市看看更多商品吧。</p>
+      </div>
+      <div v-if="discovery.popular.length" class="discovery-popular">
+        <div class="section-heading">
+          <div>
+            <h2>同学们在收藏</h2>
+            <p>按真实收藏数排序，看看大家最近的心动。</p>
+          </div>
+          <a href="#market" class="text-button">逛逛全部好物 →</a>
+        </div>
+        <div class="goods-grid">
+          <GoodsCard v-for="g in discovery.popular" :key="g.id" :goods="g" />
+        </div>
+      </div>
+    </section>
+    <div v-else-if="discoveryFailed" class="hint-box">
+      推荐暂时未能加载。<button class="text-button" @click="discover">重新加载推荐</button>
+    </div>
     <section id="market" class="market-section">
       <div class="section-heading">
         <div>
@@ -256,5 +333,20 @@ onMounted(async () => {
         ><Icon name="plus" :size="19" />发布我的闲置</RouterLink
       ><Icon class="banner-leaf" name="leaf" :size="145" />
     </section>
+    <el-dialog
+      :model-value="!!announcement"
+      :title="announcement?.title"
+      width="560px"
+      @close="announcement = null"
+      ><p class="description">{{ announcement?.content }}</p>
+      <p class="chart-note">
+        更新于
+        {{
+          String(announcement?.updated_at || '')
+            .replace('T', ' ')
+            .slice(0, 16)
+        }}
+      </p></el-dialog
+    >
   </div>
 </template>

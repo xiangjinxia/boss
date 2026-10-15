@@ -13,6 +13,8 @@ assert paths, 'No project files found'
 with zipfile.ZipFile(target, 'w', zipfile.ZIP_DEFLATED, compresslevel=6) as z:
     for name in paths:
         p = root/name
+        if name.endswith('.zip'):
+            continue
         if p.is_file() and p.resolve() != target:
             assert p.resolve().is_relative_to(root), f'File escapes project: {name}'
             assert p.name == '.env.example' or not p.name.startswith('.env'), 'Refusing to package environment credentials'

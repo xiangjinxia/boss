@@ -1,6 +1,8 @@
-# 免安装依赖的前端启动方式
+# V1.1 免安装依赖的前端启动方式
 
 适合 npm 下载缓慢、只想先运行界面的情况。保留完整源码开发方式；本目录的前端产物是源码构建出的固定版本，仍然连接真实的 Spring Boot 和 MySQL。
+
+**本版新增功能需要 V1.1 后端。首次从旧版升级，请下载完整升级包并按根目录“替换启动说明.md”更新 backend/src 与 pom.xml；仅更新前端会缺少接口。**
 
 1. 保持 IDEA 中 `CampusApplication` 运行成功，后端端口为 8080。
 2. 将整个 ZIP **解压后**，双击根目录 `START-WEB.bat`。
@@ -10,7 +12,7 @@
 
 买家 buyer、卖家 seller、管理员 admin，演示密码均为 Campus123!。
 
-单独下载的 `campus-frontend-ready.zip` 解压到新文件夹即可，不用覆盖你原来已经配置好的 backend。
+单独下载的 `campus-frontend-ready.zip` 解压到新文件夹即可，后续同版本前端更新可单独替换；本次从 V1.0 升级需同步更新后端，保留原有配置和 uploads。
 
 源码修改后，免安装版本不会自动变化：正常开发仍在 frontend 运行 npm ci 和 npm run dev。需要更新免安装版本时，在项目根目录执行 `python scripts/build-ready-web.py`（该步骤需要已安装的前端依赖）。
 

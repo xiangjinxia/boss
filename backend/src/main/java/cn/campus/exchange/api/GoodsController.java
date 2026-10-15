@@ -123,6 +123,11 @@ public class GoodsController {
     return ApiResult.ok(orders.create(SecurityConfig.actor(), r.goodsId()));
   }
 
+  @GetMapping("/orders/{id}")
+  public Object orderDetail(@PathVariable long id) {
+    return ApiResult.ok(orders.detail(id, SecurityConfig.actor()));
+  }
+
   @PostMapping("/orders/{id}/actions")
   public Object action(@PathVariable long id, @Valid @RequestBody Requests.Action r) {
     orders.action(id, SecurityConfig.actor(), r);

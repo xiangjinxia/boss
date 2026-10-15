@@ -15,14 +15,18 @@ public class AdminController {
   }
 
   @GetMapping("/dashboard")
-  public Object dashboard() {
-    return ApiResult.ok(admin.dashboard());
+  public Object dashboard(
+      @RequestParam(required = false) String from, @RequestParam(required = false) String to) {
+    return ApiResult.ok(admin.dashboard(from, to));
   }
 
   @GetMapping("/goods")
   public Object goods(
-      @RequestParam(required = false) String status, @RequestParam(required = false) String q) {
-    return ApiResult.ok(admin.goods(status, q));
+      @RequestParam(required = false) String status,
+      @RequestParam(required = false) String q,
+      @RequestParam(defaultValue = "1") int page,
+      @RequestParam(defaultValue = "20") int size) {
+    return ApiResult.ok(admin.goods(status, q, page, size));
   }
 
   @PostMapping("/goods/{id}/review")
@@ -32,8 +36,11 @@ public class AdminController {
   }
 
   @GetMapping("/users")
-  public Object users(@RequestParam(required = false) String q) {
-    return ApiResult.ok(admin.users(q));
+  public Object users(
+      @RequestParam(required = false) String q,
+      @RequestParam(defaultValue = "1") int page,
+      @RequestParam(defaultValue = "20") int size) {
+    return ApiResult.ok(admin.users(q, page, size));
   }
 
   @PostMapping("/users/{id}/status")
@@ -43,8 +50,11 @@ public class AdminController {
   }
 
   @GetMapping("/reports")
-  public Object reports(@RequestParam(required = false) String status) {
-    return ApiResult.ok(admin.reports(status));
+  public Object reports(
+      @RequestParam(required = false) String status,
+      @RequestParam(defaultValue = "1") int page,
+      @RequestParam(defaultValue = "20") int size) {
+    return ApiResult.ok(admin.reports(status, page, size));
   }
 
   @PostMapping("/reports/{id}/handle")
@@ -59,12 +69,60 @@ public class AdminController {
       @RequestParam(required = false) String buyer,
       @RequestParam(required = false) String seller,
       @RequestParam(required = false) String from,
-      @RequestParam(required = false) String to) {
-    return ApiResult.ok(admin.orders(status, buyer, seller, from, to));
+      @RequestParam(required = false) String to,
+      @RequestParam(defaultValue = "1") int page,
+      @RequestParam(defaultValue = "20") int size) {
+    return ApiResult.ok(admin.orders(status, buyer, seller, from, to, page, size));
   }
 
   @GetMapping("/audit")
-  public Object audit() {
-    return ApiResult.ok(admin.audit());
+  public Object audit(
+      @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int size) {
+    return ApiResult.ok(admin.audit(page, size));
+  }
+
+  @GetMapping("/categories")
+  public Object categories(
+      @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int size) {
+    return ApiResult.ok(admin.categories(page, size));
+  }
+
+  @PostMapping("/categories")
+  public Object createCategory(@Valid @RequestBody Requests.Category r) {
+    return ApiResult.ok(admin.category(null, SecurityConfig.actor().id(), r));
+  }
+
+  @PutMapping("/categories/{id}")
+  public Object editCategory(@PathVariable long id, @Valid @RequestBody Requests.Category r) {
+    return ApiResult.ok(admin.category(id, SecurityConfig.actor().id(), r));
+  }
+
+  @DeleteMapping("/categories/{id}")
+  public Object deleteCategory(@PathVariable long id) {
+    admin.deleteCategory(id, SecurityConfig.actor().id());
+    return ApiResult.ok(null);
+  }
+
+  @GetMapping("/announcements")
+  public Object announcements(
+      @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int size) {
+    return ApiResult.ok(admin.announcements(page, size));
+  }
+
+  @PostMapping("/announcements")
+  public Object createAnnouncement(@Valid @RequestBody Requests.Announcement r) {
+    return ApiResult.ok(admin.announcement(null, SecurityConfig.actor().id(), r));
+  }
+
+  @PutMapping("/announcements/{id}")
+  public Object editAnnouncement(
+      @PathVariable long id, @Valid @RequestBody Requests.Announcement r) {
+    return ApiResult.ok(admin.announcement(id, SecurityConfig.actor().id(), r));
+  }
+
+  @DeleteMapping("/announcements/{id}")
+  public Object deleteAnnouncement(@PathVariable long id) {
+    admin.deleteAnnouncement(id, SecurityConfig.actor().id());
+    return ApiResult.ok(null);
   }
 }

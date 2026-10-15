@@ -79,6 +79,6 @@ def convert(src):
 
 
 if __name__ == '__main__':
-    for name in ['设计报告', '接口说明', '测试报告', '运行与答辩指南']:
+    for name in ['设计报告', '接口说明', '测试报告', '运行与答辩指南', '完整功能说明']:
         src = ROOT/'docs'/f'{name}.md'
         if src.exists(): convert(src)

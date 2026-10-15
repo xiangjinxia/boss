@@ -6,6 +6,13 @@ const router = createRouter({
   routes: [
     { path: '/', component: () => import('./pages/Market.vue') },
     { path: '/goods/:id', component: () => import('./pages/Detail.vue') },
+    { path: '/sellers/:id', component: () => import('./pages/Seller.vue') },
+    { path: '/orders/:id', component: () => import('./pages/Order.vue'), meta: { auth: true } },
+    {
+      path: '/notifications',
+      component: () => import('./pages/Notifications.vue'),
+      meta: { auth: true }
+    },
     { path: '/login', component: () => import('./pages/Auth.vue') },
     { path: '/register', component: () => import('./pages/Auth.vue') },
     { path: '/publish', component: () => import('./pages/Publish.vue'), meta: { auth: true } },

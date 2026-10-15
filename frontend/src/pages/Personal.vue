@@ -122,6 +122,9 @@ onMounted(load)
         <h1>你好，{{ session.user?.nickname }}</h1>
         <p>{{ session.user?.bio || '每一次交换，都是一段新的校园故事。' }}</p>
       </div>
+      <RouterLink :to="`/sellers/${session.user.id}`" class="button ghost small"
+        >查看我的小铺</RouterLink
+      >
       <div class="personal-stats">
         <div>
           <strong>{{ summary.published || 0 }}</strong
@@ -281,6 +284,15 @@ onMounted(load)
                 </div>
                 <div v-if="o.cancel_reason" class="reason-line">{{ o.cancel_reason }}</div>
                 <div class="row-actions" :class="{ 'action-loading': busy }">
+                  <RouterLink :to="`/orders/${o.id}`" class="button ghost small"
+                    >交易进度{{
+                      tab === 'buying' && o.status === 'COMPLETED' && !o.review_id
+                        ? ' / 去评价'
+                        : ''
+                    }}</RouterLink
+                  ><span v-if="o.review_id" class="badge listed"
+                    >已评价 {{ o.review_rating }} 星</span
+                  >
                   <template v-if="tab === 'selling' && o.status === 'PENDING'"
                     ><button class="button primary small" @click="action(o, 'confirm')">
                       接受交易</button

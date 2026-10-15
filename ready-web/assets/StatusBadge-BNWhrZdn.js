@@ -1,0 +1,1 @@
+import{l as a}from"./api-C-UfT0JT.js";import{L as e,M as r,P as n,_ as o,$ as l,u,S as c}from"./vue-C_Q2xPDD.js";const g={__name:"StatusBadge",props:{status:String,text:String},setup(t){return(i,s)=>(e(),r("span",{class:c(["badge",t.status?.toLowerCase()])},[s[0]||(s[0]=n("span",{class:"status-dot"},null,-1)),o(l(t.text||u(a)[t.status]||t.status),1)],2))}};export{g as _};

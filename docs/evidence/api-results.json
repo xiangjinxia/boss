@@ -1,9 +1,9 @@
 {
-  "tests": 17,
+  "tests": 25,
   "failures": 0,
   "errors": 0,
-  "seconds": 5.82,
+  "seconds": 13.7,
   "database": "MySQL 8.4 (actual HTTP service)",
-  "timestamp": "2026-10-15T01:33:58Z",
+  "timestamp": "2026-10-15T06:34:29Z",
   "details": []
 }

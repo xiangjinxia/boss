@@ -13,9 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class GoodsService {
   private final Store db;
+  private final WorkflowService workflow;
 
-  public GoodsService(Store db) {
+  public GoodsService(Store db, WorkflowService workflow) {
     this.db = db;
+    this.workflow = workflow;
   }
 
   public static final String CARD =
@@ -176,10 +178,7 @@ public class GoodsService {
           r.conditionLevel(),
           r.description().trim(),
           id);
-      db.update(
-          "UPDATE trade_order SET status='CANCELLED',cancel_reason='商品修改后重新审核' WHERE goods_id=? AND"
-              + " status='PENDING'",
-          id);
+      workflow.cancelOrders(id, a.id(), "商品修改后重新审核", false);
       db.update("DELETE FROM goods_image WHERE goods_id=?", id);
     }
     for (int i = 0; i < r.images().size(); i++)
@@ -197,10 +196,7 @@ public class GoodsService {
     require(Store.id(g, "seller_id") == a.id(), 403, "只能下架本人商品");
     require(!Set.of("RESERVED", "SOLD").contains(g.get("status")), 409, "请先取消未完成交易；已售出商品不可重新操作");
     db.update("UPDATE goods SET status='OFFLINE' WHERE id=?", id);
-    db.update(
-        "UPDATE trade_order SET status='CANCELLED',cancel_reason='卖家已下架商品' WHERE goods_id=? AND"
-            + " status='PENDING'",
-        id);
+    workflow.cancelOrders(id, a.id(), "卖家已下架商品", false);
   }
 
   public Object mine(long user) {
@@ -243,14 +239,26 @@ public class GoodsService {
       db.one("SELECT id FROM message WHERE id=? AND goods_id=?", r.replyToId(), id);
       require(Store.id(g, "seller_id") == a.id(), 403, "仅卖家可回复商品咨询");
     }
-    return Map.of(
-        "id",
+    long message =
         db.insert(
             "INSERT INTO message(goods_id,sender_id,reply_to_id,content) VALUES (?,?,?,?)",
             id,
             a.id(),
             r.replyToId(),
-            r.content().trim()));
+            r.content().trim());
+    long receiver =
+        r.replyToId() == null
+            ? Store.id(g, "seller_id")
+            : Store.id(
+                db.one("SELECT sender_id FROM message WHERE id=?", r.replyToId()), "sender_id");
+    if (receiver != a.id())
+      workflow.notify(
+          receiver,
+          "MESSAGE",
+          r.replyToId() == null ? "收到商品咨询" : "卖家回复了你的留言",
+          g.get("title") + "：" + r.content().trim(),
+          "/goods/" + id);
+    return Map.of("id", message);
   }
 
   public Object inbox(Actor a) {

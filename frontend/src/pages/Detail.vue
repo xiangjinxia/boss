@@ -141,7 +141,7 @@ onMounted(load)
             <span><Icon name="sparkles" :size="15" />{{ g.condition_level }}</span
             ><span><Icon name="pin" :size="15" />校园内当面交易</span>
           </div>
-          <div class="seller-card">
+          <RouterLink :to="`/sellers/${g.seller_id}`" class="seller-card">
             <img
               v-if="g.seller_avatar"
               :src="g.seller_avatar"
@@ -152,8 +152,8 @@ onMounted(load)
               <b>{{ g.seller_name }}</b
               ><small>发布于 {{ date(g.created_at) }}</small>
             </div>
-            <span class="badge active"><Icon name="shield" :size="12" />校园同学</span>
-          </div>
+            <span class="badge active">查看小铺 <Icon name="right" :size="12" /></span>
+          </RouterLink>
           <div class="detail-buttons">
             <RouterLink
               v-if="session.user?.id === g.seller_id && !['RESERVED', 'SOLD'].includes(g.status)"

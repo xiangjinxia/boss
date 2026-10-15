@@ -1,0 +1,31 @@
+{
+  "upgrade": "V1 to V2 on existing MySQL",
+  "before": {
+    "app_user": "6",
+    "goods": "45",
+    "trade_order": "16",
+    "favorite": "6",
+    "message": "5",
+    "flyway_schema_history": "1"
+  },
+  "after": {
+    "app_user": "6",
+    "goods": "45",
+    "trade_order": "16",
+    "favorite": "6",
+    "message": "5",
+    "flyway_schema_history": "2"
+  },
+  "original_record_counts_preserved": true,
+  "new_business_tables": [
+    "trade_review",
+    "order_event",
+    "notification",
+    "announcement"
+  ],
+  "fresh_database_migrations": [
+    "V1",
+    "V2"
+  ],
+  "fresh_database_started": true
+}

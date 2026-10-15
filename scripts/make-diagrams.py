@@ -46,6 +46,16 @@ DIAGRAMS = {
  user -> report [label="举报/处理"];
  user -> session;
  user -> audit;
+ review[label="trade_review\nUQ order_id · buyer/seller\nrating · content"];
+ event[label="order_event\norder_id · actor_id · type · time"];
+ notification[label="notification\nuser_id · kind · content · is_read"];
+ announcement[label="announcement\nstatus · pinned · title · content"];
+ order -> review [label="0..1 成交评价"];
+ user -> review [label="评价/被评价"];
+ order -> event [label="1:N 进度"];
+ user -> notification [label="1:N 接收"];
+ user -> announcement [label="管理"];
+
  ''',
  '03-goods-state': '''rankdir=TB;
  pending[label="待审核 PENDING"];
@@ -78,7 +88,7 @@ DIAGRAMS = {
 }
 for name, body in DIAGRAMS.items():
     dot = OUT/f'{name}.dot'
-    dot.write_text('digraph G {\n'+STYLE+'\n'+body+'\n}')
+    dot.write_text('\n'.join(line.rstrip() for line in ('digraph G {\n'+STYLE+'\n'+body+'\n}').splitlines())+'\n')
     subprocess.run(['dot', '-Tpng', str(dot), '-o', str(OUT/f'{name}.png')], check=True)
     subprocess.run(['dot', '-Tsvg', str(dot), '-o', str(OUT/f'{name}.svg')], check=True)
     print(name)

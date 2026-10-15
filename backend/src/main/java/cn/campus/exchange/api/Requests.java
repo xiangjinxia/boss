@@ -35,4 +35,20 @@ public final class Requests {
   public record Action(@NotBlank String action, @Size(max = 500) String reason) {}
 
   public record Report(@NotNull @Positive Long goodsId, @NotBlank @Size(max = 500) String reason) {}
+
+  public record Review(
+      @NotNull @Min(1) @Max(5) Integer rating,
+      @NotBlank @Size(min = 5, max = 500, message = "评价为 5–500 字") String content) {}
+
+  public record Category(
+      @NotBlank @Size(max = 32) String name,
+      @NotBlank @Pattern(regexp = "book|laptop|coffee|bike|shirt|box|camera|leaf") String icon,
+      @Min(0) @Max(9999) int sortOrder,
+      @NotBlank @Pattern(regexp = "ACTIVE|INACTIVE") String status) {}
+
+  public record Announcement(
+      @NotBlank @Size(max = 80) String title,
+      @NotBlank @Size(max = 2000) String content,
+      @NotBlank @Pattern(regexp = "DRAFT|PUBLISHED") String status,
+      boolean pinned) {}
 }

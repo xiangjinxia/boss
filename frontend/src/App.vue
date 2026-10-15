@@ -1,10 +1,29 @@
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, watch, onMounted, onUnmounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { session, http, clearSession, task } from './services/api'
 import Icon from './components/Icon.vue'
 const router = useRouter(),
-  menu = ref(false)
+  menu = ref(false),
+  unread = ref(0)
+const route = useRoute()
+let timer
+async function refreshUnread() {
+  if (!session.user) {
+    unread.value = 0
+    return
+  }
+  try {
+    const data = await http.get('/me/notifications', { params: { size: 1 }, quiet: true })
+    unread.value = data.unread
+  } catch {}
+}
+watch(() => [session.user?.id, route.fullPath], refreshUnread)
+onMounted(() => {
+  refreshUnread()
+  timer = setInterval(refreshUnread, 30000)
+})
+onUnmounted(() => clearInterval(timer))
 async function logout() {
   await task(() => http.post('/auth/logout'))
   clearSession()
@@ -27,6 +46,10 @@ async function logout() {
         <RouterLink to="/publish" class="button primary publish-button"
           ><Icon name="plus" :size="18" />发布闲置</RouterLink
         ><template v-if="session.user"
+          ><RouterLink to="/notifications" class="notification-bell" aria-label="站内通知"
+            ><Icon name="bell" :size="20" /><span v-if="unread">{{
+              unread > 99 ? '99+' : unread
+            }}</span></RouterLink
           ><RouterLink to="/me" class="header-user" :title="session.user.nickname"
             ><img v-if="session.user.avatar" :src="session.user.avatar" alt="头像" /><span v-else>{{
               session.user.nickname.slice(0, 1)
