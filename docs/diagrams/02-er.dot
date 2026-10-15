@@ -1,0 +1,47 @@
+digraph G {
+graph [bgcolor="white",pad="0.35",nodesep="0.45",ranksep="0.65",dpi=150,fontname="Noto Sans CJK SC"];
+node [shape=box,style="rounded,filled",fillcolor="#edf4e7",color="#9ab28a",fontcolor="#315c38",fontname="Noto Sans CJK SC",fontsize=12,margin="0.18,0.12"];
+edge [color="#8ba37b",fontcolor="#7c8b71",fontname="Noto Sans CJK SC",fontsize=10];
+rankdir=LR;
+ user[label="app_user
+PK id · UQ username
+password_hash · role · status"];
+ category[label="category
+PK id · name · icon"];
+ goods[label="goods
+PK id · seller_id · category_id
+price · status · reject_reason"];
+ image[label="goods_image
+goods_id · image_url · sort_order"];
+ favorite[label="favorite
+UQ(user_id,goods_id)"];
+ message[label="message
+goods_id · sender_id
+reply_to_id · content"];
+ order[label="trade_order
+buyer_id · seller_id · goods_id
+amount · status · snapshot
+UQ active_goods_id"];
+ report[label="report
+reporter_id · goods_id
+status · result · handled_by"];
+ session[label="auth_session / upload_file
+令牌摘要与图片上传归属"];
+ audit[label="audit_log
+admin_id · target · action"];
+ user -> goods [label="1:N 发布"];
+ category -> goods [label="1:N 分类"];
+ goods -> image [label="1:N 图片"];
+ user -> favorite [label="1:N"];
+ goods -> favorite [label="1:N"];
+ goods -> message [label="1:N 留言"];
+ user -> message [label="1:N 发送"];
+ message -> message [label="回复"];
+ goods -> order [label="1:N 历史交易"];
+ user -> order [label="买家/卖家"];
+ goods -> report [label="1:N 举报"];
+ user -> report [label="举报/处理"];
+ user -> session;
+ user -> audit;
+
+}

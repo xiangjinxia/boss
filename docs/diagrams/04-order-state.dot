@@ -1,0 +1,22 @@
+digraph G {
+graph [bgcolor="white",pad="0.35",nodesep="0.45",ranksep="0.65",dpi=150,fontname="Noto Sans CJK SC"];
+node [shape=box,style="rounded,filled",fillcolor="#edf4e7",color="#9ab28a",fontcolor="#315c38",fontname="Noto Sans CJK SC",fontsize=12,margin="0.18,0.12"];
+edge [color="#8ba37b",fontcolor="#7c8b71",fontname="Noto Sans CJK SC",fontsize=10];
+rankdir=LR;
+ pending[label="待卖家确认
+PENDING"];
+ confirmed[label="待线下交易
+CONFIRMED"];
+ completed[label="已完成
+COMPLETED",fillcolor="#d7e7c8"];
+ cancelled[label="已取消
+CANCELLED",fillcolor="#f5e9d8"];
+ pending -> confirmed [label="卖家接受
+商品预订"];
+ confirmed -> completed [label="买家确认
+商品售出"];
+ pending -> cancelled [label="拒绝/取消/其他订单获确认"];
+ confirmed -> cancelled [label="双方之一取消
+商品恢复上架"];
+
+}

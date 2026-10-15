@@ -1,0 +1,11 @@
+{
+  "samples": 30,
+  "goods": 524,
+  "median_ms": 51.04,
+  "p95_ms": 130.73,
+  "max_ms": 177.34,
+  "target_ms": 3000,
+  "passed": true,
+  "conditions": "local HTTP / MySQL 8.4 / warmed JVM / single client / page size 12",
+  "timestamp": "2026-10-15T01:26:55Z"
+}
