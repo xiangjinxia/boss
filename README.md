@@ -6,6 +6,7 @@
 
 ## 先看这里
 
+- **npm 下载太慢、想先打开界面**：保持 IDEA 后端运行，双击根目录 `START-WEB.bat`，无需安装前端依赖。使用说明见 `READY-WEB.md`；也可单独下载仓库里的 `campus-frontend-ready.zip`，解压到新文件夹后双击启动。
 - 使用 IDEA 开发、已有本机 MySQL：按下文“IDEA + 本机 MySQL”操作，无需 Docker。
 - 想用容器快速准备数据库：使用根目录 `compose.yaml`，只运行数据库。
 - 文档在 `docs/`，数据库结构在 `backend/src/main/resources/db/migration/V1__schema.sql`。
